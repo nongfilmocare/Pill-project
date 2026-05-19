@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import drugData from '../data/drugs.json';
+import Navbar from '../components/Navbar';
 import Header from '../components/Header';
 import SearchFilters from '../components/SearchFilters';
 import DrugCard from '../components/DrugCard';
@@ -17,8 +18,24 @@ export default function RduAppPage() {
 
     // กรองประเภทด่วน (Quick Filters)
     if (selectedFilter !== 'ALL') {
-      const filterLower = selectedFilter.toLowerCase();
-      result = result.filter(d => d.d && d.d.toLowerCase().includes(filterLower));
+      result = result.filter(d => {
+        if (!d.d) return false;
+        const form = d.d.toLowerCase();
+        
+        const isTablet = form.includes('tablet') || form.includes('pill');
+        const isCapsule = form.includes('capsule') || form.includes('cap');
+        const isCream = form.includes('cream') || form.includes('ointment') || form.includes('gel') || form.includes('lotion');
+        const isInjection = form.includes('inject') || form.includes('infusion');
+        const isLiquid = (form.includes('syrup') || form.includes('suspension') || form.includes('solution') || form.includes('liquid') || form.includes('drop') || form.includes('mixture') || form.includes('elixir')) && !isInjection;
+        
+        if (selectedFilter === 'tablet') return isTablet;
+        if (selectedFilter === 'capsule') return isCapsule;
+        if (selectedFilter === 'cream') return isCream;
+        if (selectedFilter === 'injection') return isInjection;
+        if (selectedFilter === 'liquid') return isLiquid;
+        if (selectedFilter === 'others') return !isTablet && !isCapsule && !isCream && !isInjection && !isLiquid;
+        return true;
+      });
     }
 
     // ค้นหารายละเอียด (Search Query)
@@ -42,6 +59,13 @@ export default function RduAppPage() {
     setVisibleCount(50);
   }, [searchQuery, selectedFilter]);
 
+  // เลื่อนกลับขึ้นไปบนสุดโดยอัตโนมัติเมื่อพิมพ์ค้นหาหรือล้างข้อมูล
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.scrollY > 0) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [searchQuery]);
+
   const displayedDrugs = useMemo(() => {
     return filteredDrugs.slice(0, visibleCount);
   }, [filteredDrugs, visibleCount]);
@@ -51,9 +75,11 @@ export default function RduAppPage() {
   };
 
   return (
-    <div className="app-container">
-      {/* 1. Header ส่วนหัวแอปพลิเคชัน */}
-      <Header />
+    <>
+      <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <div className="app-container">
+        {/* 1. Header ส่วนหัวแอปพลิเคชัน */}
+        <Header />
 
       {/* 2. ส่วนการกรองและค้นหาข้อมูล (Search & Filters) */}
       <SearchFilters 
@@ -116,5 +142,6 @@ export default function RduAppPage() {
         </p>
       </footer>
     </div>
+    </>
   );
 }
