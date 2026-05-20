@@ -8,10 +8,15 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      // If the sticky search input is currently focused, keep it sticky to prevent bouncing/disappearing
       const isInputFocused = document.activeElement && document.activeElement.classList.contains('navbar-search-input');
       
-      if (window.scrollY > 220 || isInputFocused) {
+      // If scroll position is close to the top, absolutely clear sticky status to prevent sticking/overlapping
+      if (window.scrollY < 120) {
+        setIsSticky(false);
+        if (isInputFocused) {
+          document.activeElement.blur(); // Dismiss mobile keyboard gracefully
+        }
+      } else if (window.scrollY > 220 || isInputFocused) {
         setIsSticky(true);
       } else {
         setIsSticky(false);
@@ -59,7 +64,6 @@ export default function Navbar({ searchQuery, setSearchQuery }) {
                 placeholder="ค้นหาชื่อยา..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                autoFocus={isSticky} // Ensure focus is kept
               />
               {searchQuery && (
                 <button className="navbar-clear-btn" onClick={() => setSearchQuery('')}>✕</button>

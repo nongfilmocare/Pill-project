@@ -9,6 +9,18 @@ export default function LeafletModal({ drug, onClose }) {
   const [fdaCopied, setFdaCopied] = useState(false);
   const [searchSource, setSearchSource] = useState('');
 
+  // Dispatch custom event to notify Chatbot of active drug focus
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && drug) {
+      window.dispatchEvent(new CustomEvent('active-drug-changed', { detail: drug }));
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('active-drug-changed', { detail: null }));
+      }
+    };
+  }, [drug]);
+
   const selectedRdu = useMemo(() => {
     return getRduDetails(drug);
   }, [drug]);

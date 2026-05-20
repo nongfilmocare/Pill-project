@@ -1,4 +1,4 @@
-import { RDU_MONOGRAPHS } from '../data/monographs';
+import { RDU_MONOGRAPHS } from '../data/monographs.js';
 
 // ฟังก์ชันแปลงรูปแบบยา (Dosage Form) เป็นไอคอนสุดเจ๋ง
 export const getDosageIcon = (form) => {
@@ -91,7 +91,7 @@ export const getRduDetails = (drug) => {
     matchedInstructions = `${dynamicInstructions}\n• ต้องรับประทานยาติดต่อกันจนครบกำหนดตามแพทย์หรือเภสัชกรสั่งอย่างเคร่งครัด แม้อาการจะดีขึ้นแล้ว เพื่อป้องกันการดื้อยาของเชื้อแบคทีเรีย`;
     matchedAdverse = "อาจมีอาการท้องเสีย ถ่ายเหลว คลื่นไส้ อาเจียน หรือมีผื่นคันตามผิวหนัง";
     matchedContra = "ห้ามใช้ในผู้ที่มีประวัติเคยแพ้ยาในกลุ่มเพนิซิลลิน (Penicillins) หรือยากลุ่มเซฟาโลสปอริน (Cephalosporins) อย่างเด็ดขาด";
-  } else if (activeIng.includes('ibuprofen') || activeIng.includes('diclofenac') || activeIng.includes('mefenamic') || activeIng.includes('naproxen')) {
+  } else if (activeIng.includes('ibuprofen') || activeIng.includes('diclofenac') || activeIng.includes('mefenamic') || activeIng.includes('naproxen') || activeIng.includes('celecoxib')) {
     matchedIndication = "ยาบรรเทาอาการปวดและลดการอักเสบที่ไม่ใช่สเตียรอยด์ (NSAIDs) บรรเทาอาการปวดระดับปานกลาง เช่น ปวดข้อ ปวดฟัน ปวดกล้ามเนื้อ หรือปวดประจำเดือน และช่วยลดไข้";
     matchedInstructions = `${dynamicInstructions}\n• ควรรับประทานทันทีหลังอาหารทันที (หรือพร้อมอาหาร) และดื่มน้ำตามมากๆ เพื่อช่วยป้องกันการระคายเคืองหรือเกิดแผลในกระเพาะอาหาร`;
     matchedAdverse = "ระคายเคืองกระเพาะอาหาร ปวดท้อง แน่นท้อง ท้องอืด หรืออาจเกิดแผลในกระเพาะอาหารหากรับประทานติดต่อกันเป็นเวลานาน";
